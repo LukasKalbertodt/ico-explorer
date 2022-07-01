@@ -34,3 +34,15 @@ canvas {
     border: 4px solid rgba(255, 255, 255, 10%);
     border-radius: 4px;
 }
+
+label {
+    display: inline-flex;
+    align-items: self-end;
+    gap: 8px;
+    cursor: pointer;
+}
+
+input[type="checkbox"] {
+    cursor: pointer;
+    transform: scale(1.3);
+}

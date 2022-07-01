@@ -1,46 +1,63 @@
 import * as Three from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-import { unreachable } from "./util/err";
-import { setup } from "./setup";
 import { setupLight } from "./light";
+import { createMesh } from "./mesh";
+import { setup } from "./setup";
+import { Ui } from "./ui";
+import { getElement } from "./util";
 
 
 const main = () => {
+    const ui = new Ui();
+
     // Setup canvas and renderer
-    const canvas = document.getElementById("canvas");
-    if (!(canvas instanceof HTMLCanvasElement)) {
-        return unreachable("Canvas is not a canvas!!");
-    }
+    const canvas = getElement("canvas", HTMLCanvasElement);
     const { renderer, camera } = setup(canvas);
 
-
+    // Setup controls, scene and lighting.
     const controls = setupCameraControls(camera, canvas);
     const scene = new Three.Scene();
     setupLight(scene);
 
-    const geometry = new Three.IcosahedronGeometry(1);
+    // Prepare a group that holds all geometry.
+    const objectGroup = new Three.Group();
+    scene.add(objectGroup);
+
+    // Generate the actual mesh (now and whenever something changes).
+    const updateMesh = () => {
+        objectGroup.clear();
+        const object = createMesh({
+            projectToSphere: ui.projectToSphere.checked,
+        });
+        addMesh(objectGroup, object);
+    };
+    updateMesh();
+    ui.onChange(updateMesh);
 
 
-    // Add the solid object.
-    const material = new Three.MeshPhysicalMaterial({ color: 0xffffff });
-    scene.add(new Three.Mesh(geometry, material));
-
-    // Draw the same object as wireframe. We scale it up slightly to avoid the
-    // wireframe lines z-fighting with the object.
-    const line = new Three.LineSegments(
-        new Three.WireframeGeometry(geometry.clone().scale(1.001, 1.001, 1.001)),
-        new Three.LineBasicMaterial({ linewidth: 8 })
-    );
-    scene.add(line);
-
-
+    // Run main loop
     const animate = () => {
         requestAnimationFrame(animate);
         controls.update();
         renderer.render(scene, camera);
     };
     animate();
+};
+
+const addMesh = (scene: Three.Group, mesh: Three.BufferGeometry) => {
+    // Add the solid object.
+    const material = new Three.MeshPhysicalMaterial({ color: 0xffffff });
+    const solid = new Three.Mesh(mesh, material);
+    scene.add(solid);
+
+    // Draw the same object as wireframe. We scale it up slightly to avoid the
+    // wireframe lines z-fighting with the object.
+    const line = new Three.LineSegments(
+        new Three.WireframeGeometry(mesh.clone().scale(1.001, 1.001, 1.001)),
+        new Three.LineBasicMaterial({ linewidth: 8 })
+    );
+    scene.add(line);
 };
 
 const setupCameraControls = (camera: Three.Camera, canvas: HTMLCanvasElement): OrbitControls => {
