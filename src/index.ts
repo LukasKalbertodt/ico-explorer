@@ -29,6 +29,7 @@ const main = () => {
         objectGroup.clear();
         const object = createMesh({
             projectToSphere: ui.projectToSphere.checked,
+            tesselationLevel: Number(ui.tesselationLevel.value),
         });
         addMesh(objectGroup, object);
     };
@@ -47,7 +48,11 @@ const main = () => {
 
 const addMesh = (scene: Three.Group, mesh: Three.BufferGeometry) => {
     // Add the solid object.
-    const material = new Three.MeshPhysicalMaterial({ color: 0xffffff });
+    const material = new Three.MeshPhongMaterial({
+        color: 0xffffff,
+        shininess: 80.0,
+        flatShading: true,
+    });
     const solid = new Three.Mesh(mesh, material);
     scene.add(solid);
 
@@ -55,7 +60,7 @@ const addMesh = (scene: Three.Group, mesh: Three.BufferGeometry) => {
     // wireframe lines z-fighting with the object.
     const line = new Three.LineSegments(
         new Three.WireframeGeometry(mesh.clone().scale(1.001, 1.001, 1.001)),
-        new Three.LineBasicMaterial({ linewidth: 8 })
+        new Three.LineBasicMaterial({ linewidth: 6 })
     );
     scene.add(line);
 };
