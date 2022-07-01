@@ -19,14 +19,20 @@ const main = () => {
     const scene = new Three.Scene();
     setupLight(scene);
 
-    const geometry = new Three.BoxGeometry( 1, 1, 1 );
-    const material = new Three.MeshPhysicalMaterial( { color: 0xffffff } );
-    const cube = new Three.Mesh( geometry, material );
-    scene.add( cube );
+    const geometry = new Three.IcosahedronGeometry(1);
 
 
+    // Add the solid object.
+    const material = new Three.MeshPhysicalMaterial({ color: 0xffffff });
+    scene.add(new Three.Mesh(geometry, material));
 
-
+    // Draw the same object as wireframe. We scale it up slightly to avoid the
+    // wireframe lines z-fighting with the object.
+    const line = new Three.LineSegments(
+        new Three.WireframeGeometry(geometry.clone().scale(1.001, 1.001, 1.001)),
+        new Three.LineBasicMaterial({ linewidth: 8 })
+    );
+    scene.add(line);
 
 
     const animate = () => {
@@ -45,9 +51,9 @@ const setupCameraControls = (camera: Three.Camera, canvas: HTMLCanvasElement): O
     controls.enableDamping = true;
     controls.dampingFactor = 0.07;
     controls.autoRotate = true;
-    camera.position.x = 1.2;
-    camera.position.y = 0.9;
-    camera.position.z = 0.8;
+    camera.position.x = 1.3;
+    camera.position.y = 1.0;
+    camera.position.z = 0.9;
     return controls;
 };
 
