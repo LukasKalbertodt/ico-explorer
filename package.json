@@ -1,12 +1,12 @@
 {
     "name": "ico-explorer",
     "version": "1.0.0",
-    "main": "src/index.js",
     "license": "MIT",
     "scripts": {
         "start": "parcel src/index.html",
-        "build": "parcel build",
-        "lint": "eslint ."
+        "build": "parcel build src/index.html",
+        "lint": "eslint .",
+        "typecheck": "tsc"
     },
     "devDependencies": {
         "@types/three": "^0.141.0",
