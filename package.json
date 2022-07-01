@@ -5,11 +5,16 @@
     "license": "MIT",
     "scripts": {
         "start": "parcel src/index.html",
-        "build": "parcel build"
+        "build": "parcel build",
+        "lint": "eslint ."
     },
     "devDependencies": {
         "@types/three": "^0.141.0",
-        "parcel": "^2.6.2"
+        "@typescript-eslint/eslint-plugin": "^5.30.0",
+        "@typescript-eslint/parser": "^5.30.0",
+        "eslint": "^8.18.0",
+        "parcel": "^2.6.2",
+        "typescript": "^4.7.4"
     },
     "dependencies": {
         "three": "^0.142.0"

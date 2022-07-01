@@ -24,7 +24,7 @@ export const setup = (canvas: HTMLCanvasElement): SetupResult => {
     // We have to update the renderer and camera whenever the canvas changes size.
     let canvasSize = vec2(0, 0);
     const updateCanvasSize = () => {
-        const size = getPhysicalCanvasSize(canvas)
+        const size = getPhysicalCanvasSize(canvas);
         if (!canvasSize.equals(size)) {
             canvasSize = size;
             renderer.setSize(size.x, size.y, false);

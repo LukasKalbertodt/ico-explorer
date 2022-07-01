@@ -13,5 +13,5 @@ export class Ui {
         this.projectToSphere.addEventListener("change", handler);
         this.tesselationLevel.addEventListener("input", handler);
     }
-};
+}
 
