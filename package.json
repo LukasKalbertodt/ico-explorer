@@ -1,0 +1,17 @@
+{
+    "name": "ico-explorer",
+    "version": "1.0.0",
+    "main": "src/index.js",
+    "license": "MIT",
+    "scripts": {
+        "start": "parcel src/index.html",
+        "build": "parcel build"
+    },
+    "devDependencies": {
+        "@types/three": "^0.141.0",
+        "parcel": "^2.6.2"
+    },
+    "dependencies": {
+        "three": "^0.142.0"
+    }
+}
