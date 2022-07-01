@@ -18,7 +18,7 @@ type SetupResult = {
 };
 
 export const setup = (canvas: HTMLCanvasElement): SetupResult => {
-    const renderer = new Three.WebGLRenderer({ canvas });
+    const renderer = new Three.WebGLRenderer({ canvas, antialias: true });
     const camera = new Three.PerspectiveCamera(65, 16 / 9, 0.1, 1000);
 
     // We have to update the renderer and camera whenever the canvas changes size.
