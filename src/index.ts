@@ -30,7 +30,7 @@ const main = () => {
         const object = createMesh({
             projectToSphere: ui.projectToSphere.checked,
             tesselationLevel: Number(ui.tesselationLevel.value),
-        });
+        }, ui);
         addMesh(objectGroup, object);
     };
     updateMesh();
