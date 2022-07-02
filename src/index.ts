@@ -73,9 +73,8 @@ const setupCameraControls = (camera: Three.Camera, canvas: HTMLCanvasElement): O
     controls.enableDamping = true;
     controls.dampingFactor = 0.07;
     controls.autoRotate = true;
-    camera.position.x = 1.3;
-    camera.position.y = 1.0;
-    camera.position.z = 0.9;
+    camera.position.x = 1.8;
+    camera.position.y = 0.5;
     return controls;
 };
 
