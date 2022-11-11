@@ -8,8 +8,22 @@ import { Ui } from "./ui";
 import { getElement } from "./util";
 
 
+const LOCAL_STORAGE_KEY = "icoExplorerSettings";
+
 const main = () => {
     const ui = new Ui();
+
+    // Intially load options from local storage
+    const initialSettings = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (initialSettings) {
+        const obj = JSON.parse(initialSettings);
+        const expectedFields = ["projectToSphere", "tesselationLevel", "truncate"];
+        if (expectedFields.every(field => field in obj)) {
+            ui.projectToSphere.checked = obj.projectToSphere;
+            ui.tesselationLevel.value = obj.tesselationLevel;
+            ui.truncate.value = obj.truncate;
+        }
+    }
 
     // Setup canvas and renderer
     const canvas = getElement("canvas", HTMLCanvasElement);
@@ -26,12 +40,14 @@ const main = () => {
 
     // Generate the actual mesh (now and whenever something changes).
     const updateMesh = () => {
-        objectGroup.clear();
-        const object = createMesh({
+        const options = {
             projectToSphere: ui.projectToSphere.checked,
             tesselationLevel: Number(ui.tesselationLevel.value),
             truncate: Number(ui.truncate.value),
-        }, ui);
+        };
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(options));
+        objectGroup.clear();
+        const object = createMesh(options, ui);
         addMesh(objectGroup, object);
     };
     updateMesh();
