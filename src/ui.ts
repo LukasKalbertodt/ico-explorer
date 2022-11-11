@@ -3,6 +3,7 @@ import { getElement } from "./util";
 export class Ui {
     projectToSphere: HTMLInputElement;
     tesselationLevel: HTMLInputElement;
+    truncate: HTMLInputElement;
 
     areaStat: RangeIndicator;
     sideLengthStat: RangeIndicator;
@@ -11,6 +12,7 @@ export class Ui {
     constructor() {
         this.projectToSphere = getElement("projectToSphere", HTMLInputElement);
         this.tesselationLevel = getElement("tesselationLevel", HTMLInputElement);
+        this.truncate = getElement("truncate", HTMLInputElement);
         this.areaStat = new RangeIndicator("areaStat");
         this.sideLengthStat = new RangeIndicator("sideLengthStat");
         this.angleStat = new RangeIndicator("angleStat", "°");
@@ -19,6 +21,7 @@ export class Ui {
     onChange(handler: () => void) {
         this.projectToSphere.addEventListener("change", handler);
         this.tesselationLevel.addEventListener("input", handler);
+        this.truncate.addEventListener("input", handler);
     }
 }
 

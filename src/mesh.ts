@@ -7,6 +7,7 @@ import { vec3 } from "./util";
 type Options = {
     projectToSphere: boolean;
     tesselationLevel: number;
+    truncate: number;
 };
 
 export const createMesh = (options: Options, ui: Ui): Three.BufferGeometry => {
@@ -54,17 +55,33 @@ const icoFace = (
 
     for (let i = 0; i < max; i++) {
         for (let j = 0; j <= i; j++) {
-            triangles.add([
-                gridPoint(i, j),
-                gridPoint(i + 1, j),
-                gridPoint(i + 1, j + 1),
-            ]);
+            type Points = [[number, number], [number, number], [number, number]];
+            const addTri = (points: Points) => {
+                const distances = points.map(([i, j]) => Math.min(i, (max - i) + j, max - j));
+                const distFromCorner = Math.min(...distances);
 
-            if (i + 1 != max) {
+                if (distFromCorner < options.truncate) {
+                    return;
+                }
+
+                const [[i0, j0], [i1, j1], [i2, j2]] = points;
                 triangles.add([
-                    gridPoint(i + 1, j + 1),
-                    gridPoint(i + 1, j),
-                    gridPoint(i + 2, j + 1),
+                    gridPoint(i0, j0),
+                    gridPoint(i1, j1),
+                    gridPoint(i2, j2),
+                ]);
+            };
+
+            addTri([
+                [i, j],
+                [i + 1, j],
+                [i + 1, j + 1],
+            ]);
+            if (i + 1 != max) {
+                addTri([
+                    [i + 1, j + 1],
+                    [i + 1, j],
+                    [i + 2, j + 1],
                 ]);
             }
         }
