@@ -1,5 +1,5 @@
 import { Vector2, Vector3 } from "three";
-import { unreachable } from "./err";
+import { bug } from "./err";
 
 
 export const vec2 = (x: number, y: number): Vector2 => new Vector2(x, y);
@@ -10,5 +10,5 @@ export const getElement = <T extends HTMLElement>(id: string, ctor: { new (): T 
     const element = document.getElementById(id);
     return element instanceof ctor
         ? element
-        : unreachable(`Element with id '${id}' is not an instance of '${ctor}`);
+        : bug(`Element with id '${id}' is not an instance of '${ctor}`);
 };

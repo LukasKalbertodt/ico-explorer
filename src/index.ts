@@ -2,10 +2,11 @@ import * as Three from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import { setupLight } from "./light";
-import { createMesh } from "./mesh";
+import { createMesh, Options as MeshOptions } from "./mesh";
 import { setup } from "./setup";
 import { Ui } from "./ui";
 import { getElement } from "./util";
+import { Bug } from "./util/err";
 
 
 const LOCAL_STORAGE_KEY = "icoExplorerSettings";
@@ -17,9 +18,9 @@ const main = () => {
     const initialSettings = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (initialSettings) {
         const obj = JSON.parse(initialSettings);
-        const expectedFields = ["projectToSphere", "tesselationLevel", "truncate"];
+        const expectedFields = ["projection", "tesselationLevel", "truncate"];
         if (expectedFields.every(field => field in obj)) {
-            ui.projectToSphere.checked = obj.projectToSphere;
+            ui.projection.value = obj.projection;
             ui.tesselationLevel.value = obj.tesselationLevel;
             ui.truncate.value = obj.truncate;
         }
@@ -40,8 +41,12 @@ const main = () => {
 
     // Generate the actual mesh (now and whenever something changes).
     const updateMesh = () => {
-        const options = {
-            projectToSphere: ui.projectToSphere.checked,
+        const proj = ui.projection.value;
+        if (proj !== "none" && proj !== "normalize") {
+            throw new Bug(`invalid projection type: ${proj}`);
+        }
+        const options: MeshOptions = {
+            projection: proj,
             tesselationLevel: Number(ui.tesselationLevel.value),
             truncate: Number(ui.truncate.value),
         };

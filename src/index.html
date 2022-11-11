@@ -18,18 +18,24 @@
             <div class="sep"></div>
 
             <div class="basic-settings">
-                <label>
-                    <input id="projectToSphere" type="checkbox" />
-                    Project vertices onto sphere
-                </label>
-                <label>
-                    Tesselation level:
-                    <input id="tesselationLevel" type="range" min="0" max="10" />
-                </label>
-                <label>
-                    Truncate:
-                    <input id="truncate" type="range" min="0" max="10" value="0" />
-                </label>
+                <fieldset class="multiple-choice">
+                    <legend>Projection</legend>
+                    <form id="projection">
+                        <label><input value="none" name="projection" type="radio" checked />None</label>
+                        <label><input value="normalize" name="projection" type="radio" />Normalize</label>
+                    </form>
+                </fieldset>
+                <fieldset class="labels-space-in-between">
+                    <legend>Settings</legend>
+                    <label>
+                        Tesselation level:
+                        <input id="tesselationLevel" type="range" min="0" max="10" />
+                    </label>
+                    <label>
+                        Truncate:
+                        <input id="truncate" type="range" min="0" max="10" value="0" />
+                    </label>
+                </fieldset>
             </div>
 
             <div class="sep"></div>

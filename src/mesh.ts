@@ -3,9 +3,10 @@ import { Vector3 } from "three";
 import { Ui } from "./ui";
 import { vec3 } from "./util";
 
+export type ProjectionType = "none" | "normalize";
 
-type Options = {
-    projectToSphere: boolean;
+export type Options = {
+    projection: ProjectionType;
     tesselationLevel: number;
     truncate: number;
 };
@@ -47,7 +48,7 @@ const icoFace = (
             .clone()
             .add(dir0.clone().multiplyScalar(i / max))
             .add(dir1.clone().multiplyScalar(j / max));
-        if (options.projectToSphere) {
+        if (options.projection === "normalize") {
             out.normalize();
         }
         return out;

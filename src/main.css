@@ -49,6 +49,23 @@ input[type="checkbox"] {
 
 .basic-settings {
     display: flex;
+    gap: 6px;
+    align-items: flex-start;
+}
+
+.basic-settings > fieldset {
+    border: 1px solid rgba(255, 255, 255, 50%);
+    border-radius: 4px;
+}
+
+.basic-settings label {
+    display: flex;
+    align-items: center;
+    padding: 2px;
+}
+
+.labels-space-in-between > label {
+    display: flex;
     justify-content: space-between;
 }
 

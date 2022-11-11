@@ -1,7 +1,9 @@
 import { getElement } from "./util";
+import { Bug } from "./util/err";
 
 export class Ui {
-    projectToSphere: HTMLInputElement;
+    projectionForm: HTMLFormElement;
+    projection: RadioNodeList;
     tesselationLevel: HTMLInputElement;
     truncate: HTMLInputElement;
 
@@ -10,7 +12,13 @@ export class Ui {
     angleStat: RangeIndicator;
 
     constructor() {
-        this.projectToSphere = getElement("projectToSphere", HTMLInputElement);
+        this.projectionForm = getElement("projection", HTMLFormElement);
+        const proj = this.projectionForm.elements.namedItem("projection");
+        if (!(proj instanceof RadioNodeList)) {
+            throw new Bug("radio list not found");
+        }
+        this.projection = proj;
+
         this.tesselationLevel = getElement("tesselationLevel", HTMLInputElement);
         this.truncate = getElement("truncate", HTMLInputElement);
         this.areaStat = new RangeIndicator("areaStat");
@@ -19,7 +27,7 @@ export class Ui {
     }
 
     onChange(handler: () => void) {
-        this.projectToSphere.addEventListener("change", handler);
+        this.projectionForm.addEventListener("change", handler);
         this.tesselationLevel.addEventListener("input", handler);
         this.truncate.addEventListener("input", handler);
     }
