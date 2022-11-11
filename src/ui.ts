@@ -7,6 +7,8 @@ export class Ui {
     tesselationLevel: HTMLInputElement;
     truncate: HTMLInputElement;
 
+    autoRotate: HTMLInputElement;
+
     areaStat: RangeIndicator;
     sideLengthStat: RangeIndicator;
     angleStat: RangeIndicator;
@@ -21,12 +23,14 @@ export class Ui {
 
         this.tesselationLevel = getElement("tesselationLevel", HTMLInputElement);
         this.truncate = getElement("truncate", HTMLInputElement);
+        this.autoRotate = getElement("autoRotate", HTMLInputElement);
+
         this.areaStat = new RangeIndicator("areaStat");
         this.sideLengthStat = new RangeIndicator("sideLengthStat");
         this.angleStat = new RangeIndicator("angleStat", "°");
     }
 
-    onChange(handler: () => void) {
+    onMeshOptionChange(handler: () => void) {
         this.projectionForm.addEventListener("change", handler);
         this.tesselationLevel.addEventListener("input", handler);
         this.truncate.addEventListener("input", handler);

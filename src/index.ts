@@ -10,6 +10,7 @@ import { Bug } from "./util/err";
 
 
 const LOCAL_STORAGE_KEY = "icoExplorerSettings";
+const LOCAL_STORAGE_AUTO_ROTATE_KEY = "icoExplorerAutoRotate";
 
 const main = () => {
     const ui = new Ui();
@@ -31,9 +32,14 @@ const main = () => {
     const { renderer, camera } = setup(canvas);
 
     // Setup controls, scene and lighting.
-    const controls = setupCameraControls(camera, canvas);
+    ui.autoRotate.checked = localStorage.getItem(LOCAL_STORAGE_AUTO_ROTATE_KEY) !== "false";
+    const controls = setupCameraControls(camera, canvas, ui.autoRotate.checked);
     const scene = new Three.Scene();
     setupLight(scene);
+    ui.autoRotate.addEventListener("change", () => {
+        controls.autoRotate = ui.autoRotate.checked;
+        localStorage.setItem(LOCAL_STORAGE_AUTO_ROTATE_KEY, ui.autoRotate.checked.toString());
+    });
 
     // Prepare a group that holds all geometry.
     const objectGroup = new Three.Group();
@@ -56,7 +62,7 @@ const main = () => {
         addMesh(objectGroup, object);
     };
     updateMesh();
-    ui.onChange(updateMesh);
+    ui.onMeshOptionChange(updateMesh);
 
 
     // Run main loop
@@ -87,15 +93,19 @@ const addMesh = (scene: Three.Group, mesh: Three.BufferGeometry) => {
     scene.add(line);
 };
 
-const setupCameraControls = (camera: Three.Camera, canvas: HTMLCanvasElement): OrbitControls => {
+const setupCameraControls = (
+    camera: Three.Camera,
+    canvas: HTMLCanvasElement,
+    autoRotate: boolean,
+): OrbitControls => {
     const controls = new OrbitControls(camera, canvas);
     controls.maxDistance = 5;
     controls.minDistance = 1;
     controls.rotateSpeed = 0.4;
     controls.enableDamping = true;
     controls.dampingFactor = 0.07;
-    controls.autoRotate = true;
-    camera.position.x = 1.8;
+    controls.autoRotate = autoRotate;
+    camera.position.x = 1.85;
     camera.position.y = 0.5;
     return controls;
 };
