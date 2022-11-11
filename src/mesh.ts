@@ -19,18 +19,13 @@ export const createMesh = (options: Options, ui: Ui): Three.BufferGeometry => {
     const vertexBuffer = new Float32Array(triangles.buffer);
     geometry.setAttribute("position", new Three.BufferAttribute(vertexBuffer, 3));
 
-    const areaFactor = triangles.maxArea / triangles.minArea;
-    ui.areaFactor.innerHTML = round(areaFactor).toString();
-    const sideLengthFactor = triangles.maxSideLength / triangles.minSideLength;
-    ui.sideLengthFactor.innerHTML = round(sideLengthFactor).toString();
+    ui.areaStat.update(triangles.minArea, triangles.maxArea);
+    ui.sideLengthStat.update(triangles.minSideLength, triangles.maxSideLength);
+    ui.angleStat.update(triangles.minAngle, triangles.maxAngle);
 
     // The constants below were made for an "z is up" coordinate system.
     geometry.rotateX(-Math.PI / 2);
     return geometry;
-};
-
-const round = (x: number): number => {
-    return Math.round(x * 1000) / 1000;
 };
 
 const icoFace = (
@@ -84,6 +79,8 @@ class TriangleList {
     maxArea: number = Number.NEGATIVE_INFINITY;
     minSideLength: number = Number.POSITIVE_INFINITY;
     maxSideLength: number = Number.NEGATIVE_INFINITY;
+    minAngle: number = Number.POSITIVE_INFINITY;
+    maxAngle: number = Number.NEGATIVE_INFINITY;
 
     add(tri: Triangle) {
         const area = triArea(tri);
@@ -97,6 +94,17 @@ class TriangleList {
         ];
         this.minSideLength = Math.min(this.minSideLength, ...lengths);
         this.maxSideLength = Math.max(this.maxSideLength, ...lengths);
+
+        const a2b = tri[1].clone().sub(tri[0]);
+        const b2c = tri[2].clone().sub(tri[1]);
+        const c2a = tri[0].clone().sub(tri[2]);
+        const angles = [
+            a2b.angleTo(b2c) * 180 / Math.PI,
+            b2c.angleTo(c2a) * 180 / Math.PI,
+            c2a.angleTo(a2b) * 180 / Math.PI,
+        ];
+        this.minAngle = Math.min(this.minAngle, ...angles);
+        this.maxAngle = Math.max(this.maxAngle, ...angles);
 
         this.buffer.push(...tri[0].toArray());
         this.buffer.push(...tri[1].toArray());

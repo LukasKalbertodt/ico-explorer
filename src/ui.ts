@@ -4,14 +4,16 @@ export class Ui {
     projectToSphere: HTMLInputElement;
     tesselationLevel: HTMLInputElement;
 
-    areaFactor: HTMLDivElement;
-    sideLengthFactor: HTMLDivElement;
+    areaStat: RangeIndicator;
+    sideLengthStat: RangeIndicator;
+    angleStat: RangeIndicator;
 
     constructor() {
         this.projectToSphere = getElement("projectToSphere", HTMLInputElement);
         this.tesselationLevel = getElement("tesselationLevel", HTMLInputElement);
-        this.areaFactor = getElement("areaFactor", HTMLDivElement);
-        this.sideLengthFactor = getElement("sideLengthFactor", HTMLDivElement);
+        this.areaStat = new RangeIndicator("areaStat");
+        this.sideLengthStat = new RangeIndicator("sideLengthStat");
+        this.angleStat = new RangeIndicator("angleStat", "°");
     }
 
     onChange(handler: () => void) {
@@ -20,3 +22,25 @@ export class Ui {
     }
 }
 
+export class RangeIndicator {
+    html: HTMLDivElement;
+    valueUnit?: string;
+
+    constructor(id: string, valueUnit?: string) {
+        this.html = getElement(id, HTMLDivElement);
+        this.valueUnit = valueUnit;
+    }
+
+    update(min: number, max: number) {
+        const round = (n: number, digits: number): number => {
+            const base = Math.pow(10, digits);
+            return Math.round(n * base) / base;
+        };
+
+        const factor = max / min;
+        this.html.innerHTML = `<div>${round(factor, 2)}x</div>`
+            + (this.valueUnit
+                ? `<div>${round(min, 1)}${this.valueUnit}–${round(max, 1)}${this.valueUnit}</div>`
+                : "");
+    }
+}
