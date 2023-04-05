@@ -2,7 +2,7 @@ import * as Three from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import { setupLight } from "./light";
-import { createMesh, Options as MeshOptions } from "./mesh";
+import { createMesh, Options as MeshOptions, PROJECTIONS, ProjectionType } from "./mesh";
 import { setup } from "./setup";
 import { Ui } from "./ui";
 import { getElement } from "./util";
@@ -48,11 +48,12 @@ const main = () => {
     // Generate the actual mesh (now and whenever something changes).
     const updateMesh = () => {
         const proj = ui.projection.value;
-        if (proj !== "none" && proj !== "normalize") {
+
+        if (!(proj in PROJECTIONS)) {
             throw new Bug(`invalid projection type: ${proj}`);
         }
         const options: MeshOptions = {
-            projection: proj,
+            projection: proj as ProjectionType,
             tesselationLevel: Number(ui.tesselationLevel.value),
             truncate: Number(ui.truncate.value),
         };

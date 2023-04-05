@@ -1,9 +1,10 @@
 import * as Three from "three";
 import { Vector3 } from "three";
+import { sacsToCartesian } from "./projections/sacs";
 import { Ui } from "./ui";
 import { vec3 } from "./util";
 
-export type ProjectionType = "none" | "normalize";
+export type ProjectionType = "none" | "normalize" | "sacs";
 
 export type Options = {
     projection: ProjectionType;
@@ -39,19 +40,9 @@ const icoFace = (
     const v1 = VERTEX_POSITIONS[indices[1]];
     const v2 = VERTEX_POSITIONS[indices[2]];
 
-    const dir0 = v1.clone().sub(v0);
-    const dir1 = v2.clone().sub(v1);
-
     const max = options.tesselationLevel + 1;
     const gridPoint = (i: number, j: number): Vector3 => {
-        const out = v0
-            .clone()
-            .add(dir0.clone().multiplyScalar(i / max))
-            .add(dir1.clone().multiplyScalar(j / max));
-        if (options.projection === "normalize") {
-            out.normalize();
-        }
-        return out;
+        return PROJECTIONS[options.projection]((i - j) / max, j / max, [v0, v1, v2]);
     };
 
     for (let i = 0; i < max; i++) {
@@ -87,6 +78,24 @@ const icoFace = (
             }
         }
     }
+};
+
+type ProjFn = (
+    p: number,
+    q: number,
+    base: [Three.Vector3, Three.Vector3, Three.Vector3],
+) => Three.Vector3;
+
+export const PROJECTIONS: Record<ProjectionType, ProjFn> = {
+    "none": (p, q, [v0, v1, v2]) => {
+        return v0.clone()
+            .add(v1.clone().sub(v0).multiplyScalar(p))
+            .add(v2.clone().sub(v0).multiplyScalar(q));
+    },
+
+    "normalize": (p, q, base) => PROJECTIONS["none"](p, q, base).normalize(),
+
+    "sacs": (p, q, base) => sacsToCartesian([p, q, 1 - p - q], base),
 };
 
 type Triangle = [Vector3, Vector3, Vector3];
