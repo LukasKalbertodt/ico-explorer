@@ -53,9 +53,8 @@ export class RangeIndicator {
         };
 
         const factor = max / min;
+        const unit = this.valueUnit ?? "";
         this.html.innerHTML = `<div>${round(factor, 2)}x</div>`
-            + (this.valueUnit
-                ? `<div>${round(min, 1)}${this.valueUnit}–${round(max, 1)}${this.valueUnit}</div>`
-                : "");
+            + `<div>${round(min, 3)}${unit}–${round(max, 3)}${unit}</div>`;
     }
 }

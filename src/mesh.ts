@@ -22,8 +22,10 @@ export const createMesh = (options: Options, ui: Ui): Three.BufferGeometry => {
     const vertexBuffer = new Float32Array(triangles.buffer);
     geometry.setAttribute("position", new Three.BufferAttribute(vertexBuffer, 3));
 
-    ui.areaStat.update(triangles.minArea, triangles.maxArea);
-    ui.sideLengthStat.update(triangles.minSideLength, triangles.maxSideLength);
+    const lenFactor = options.tesselationLevel + 1;
+    const areaFactor = lenFactor * lenFactor;
+    ui.areaStat.update(areaFactor * triangles.minArea, areaFactor * triangles.maxArea);
+    ui.sideLengthStat.update(lenFactor * triangles.minSideLength, lenFactor * triangles.maxSideLength);
     ui.angleStat.update(triangles.minAngle, triangles.maxAngle);
 
     // The constants below were made for an "z is up" coordinate system.
